@@ -38,7 +38,7 @@ Livestream-Directors-API
 
 * **Error Response:**
 
-    **Content:** `{ error : "No directors in the list or error fetching" }`
+    **Content:** `{ error : "No director with this id" }`
 
     ---
 * **URL and Method**
@@ -83,7 +83,7 @@ Livestream-Directors-API
 
     * **Code:** 200 <br />
 
-    **Content Example:**
+    * **Content Example:**
     ```
     director: {
         full_name: "Martin Scorsese",

@@ -1,0 +1,34 @@
+{
+  "name": "Livestream-Directors-API",
+  "version": "0.0.0",
+  "description": "Livestream-Directors-API ========================",
+  "main": "server.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "async": "~0.2.9",
+    "crypto": "~0.0.3",
+    "express": "~3.3.7",
+    "pg": "~2.8.2",
+    "sequelize": "~1.7.8",
+    "supertest": "~0.13.0",
+    "validator": "~3.14.1"
+  },
+  "devDependencies": {
+    "mocha": "~1.15.1"
+  },
+  "scripts": {
+    "test": "mocha",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/alinaguzman/Livestream-Directors-API.git"
+  },
+  "author": "Alina Guzman",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/alinaguzman/Livestream-Directors-API/issues"
+  }
+}
