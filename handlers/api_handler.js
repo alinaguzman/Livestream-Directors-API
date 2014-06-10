@@ -99,8 +99,9 @@ module.exports.updateDirector = function(req,res,next){
       if(req.body.movies.length>0){
         director.favorite_movies = req.body.movies;
       }
-      director.save();
-      res.send({director:director});
+      director.save().complete(function(){
+        res.send({director:director});
+      });
     }
   });
 

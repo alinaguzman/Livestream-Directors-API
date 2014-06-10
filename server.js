@@ -51,6 +51,7 @@ function ensureAuthorized(req, res, next) {
       console.log("Api route error finding user:",err);
       res.send({error:err})
     } else {
+      debugger;
       var auth_check = crypto.createHash('md5').update(director.full_name).digest('hex');
       if(token.indexOf('Bearer ') == 0){
         token = token.replace('Bearer ','');
