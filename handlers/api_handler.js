@@ -2,7 +2,8 @@ var config = global.config || require(__dirname + '/../config.js'),
   async = require('async'),
   models = require(__dirname + '/../models'),
   Director = app.get("models").Director,
-  http = require('http');
+  http = require('http'),
+  validator = require('validator');
 
 module.exports.getDirectors = function(req,res,next){
 
@@ -11,7 +12,9 @@ module.exports.getDirectors = function(req,res,next){
       console.log("Api route error finding user:",err);
       res.send({error:err})
     } else {
-      res.send({directors:directors});
+      Director.displayAll(directors,function(err,directors){
+        res.send({directors:directors});
+      });
     }
   });
 
@@ -25,7 +28,9 @@ module.exports.getDirector = function(req,res,next){
       console.log("Error getting director",err);
       res.send("Server Error",500)
     } else {
-      res.send({director:director});
+      director.display(function(err,director){
+        res.send({director:director});
+      });
     }
   });
 
@@ -33,49 +38,48 @@ module.exports.getDirector = function(req,res,next){
 
 module.exports.saveDirector = function(req,res,next){
 
-  var livestream_id;
+  Director.validateDirector(req.body,function(err,data){
 
-  if(req.body.livestream_id && req.body.livestream_id !== ""){
-    livestream_id = req.body.livestream_id;
-    console.log("livestream id in param: ",livestream_id)
-  } else {
-    console.log("no livestream param");
-    res.send({error:'Missing livestream id'});
-  }
+    var options = {
+      host: 'api.new.livestream.com',
+      path: '/accounts/'+data[0]
+    };
 
-  var options = {
-    host: 'api.new.livestream.com',
-    path: '/accounts/'+livestream_id
-  };
-
-  http.get(options, function(res) {
-    var body = '';
-    res.on('data', function(chunk) {
-      body += chunk;
-    });
-    res.on('end', function() {
-      body = JSON.parse(body);
-      console.log("Parsing director info from http get response and saving new entry");
-
-      Director.create({
-        livestream_id: livestream_id,
-        full_name: body.full_name,
-        dob: body.dob,
-        favorite_camera: req.body.camera,
-        favorite_movies: req.body.movies
-      }).success(function (director) {
-        if(director){
-          console.log("Saved director with id ",director.id);
-          res.send({director:director})
-        } else {
-          console.log("Error saving new director");
-          res.send({"Error":'Error saving director'})
-        }
+    http.get(options, function(resp) {
+      var body = '';
+      resp.on('data', function(chunk) {
+        body += chunk;
       });
+      resp.on('end', function() {
+        body = JSON.parse(body);
+        console.log("Parsing director info from http get response and saving new entry");
+
+        Director.checkIfExists(data[0],function(err,exists){
+          if(!exists){
+            Director.create({
+              livestream_id: data[0],
+              full_name: body.full_name,
+              dob: body.dob,
+              favorite_camera: data[1],
+              favorite_movies: data[2]
+            }).success(function (director) {
+              if(director){
+                console.log("Saved director with id ",director.id);
+                res.send({director:director})
+              } else {
+                console.log("Error saving new director");
+                res.send({"Error":'Error saving director'})
+              }
+            });
+          } else {
+            res.send({message:"Director already exists"})
+          }
+        })
+      });
+    }).on('error', function(err) {
+      res.send({error: err});
+      console.log("Error looking up livestream account: " + err.message);
     });
-  }).on('error', function(err) {
-    res.send({error: err});
-    console.log("Error looking up livestream account: " + err.message);
   });
 
 };

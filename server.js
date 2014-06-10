@@ -1,6 +1,7 @@
 var config = global.config = require('./config.js'),
   express = require('express'),
-  crypto = require('crypto');
+  crypto = require('crypto'),
+  validator = require('validator');
 
 app = express();
 app.configure(function() {
