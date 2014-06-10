@@ -20,7 +20,7 @@ app.listen(config.port, function() {
 
 /*
  ===========================================================================
-                                Database
+ Database
  ===========================================================================
  */
 
@@ -36,7 +36,7 @@ app.get('models').sequelize.sync().complete(function(err, result) {
 
 /*
  ===========================================================================
-                                 Routes
+ Routes
  ===========================================================================
  */
 
@@ -45,19 +45,17 @@ function ensureAuthorized(req, res, next) {
     Director = app.get("models").Director,
     token = req.headers.authorization;
 
-    console.log('checking api update authentication.');
+  console.log('checking api update authentication.');
   Director.find({where: {id: directorId}}).complete(function (err, director) {
     if(err){
       console.log("Api route error finding user:",err);
       res.send({error:err})
     } else {
-      debugger;
       var auth_check = crypto.createHash('md5').update(director.full_name).digest('hex');
-      if(token.indexOf('Bearer ') == 0){
+      if(token && token.indexOf('Bearer ') == 0){
         token = token.replace('Bearer ','');
       }
 
-      //check md5 of account name here
       if(token == auth_check){
         console.log('api authentication verified.');
         return next();

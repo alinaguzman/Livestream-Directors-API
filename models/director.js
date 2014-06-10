@@ -60,7 +60,6 @@ module.exports = function(sequelize, DataTypes) {
           livestream_id = body.livestream_id;
           console.log("livestream id in param: ",livestream_id)
         } else {
-          console.log("no livestream param");
           callback('Missing livestream id',null);
         }
 

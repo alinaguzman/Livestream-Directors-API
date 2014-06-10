@@ -97,10 +97,10 @@ module.exports.updateDirector = function(req,res,next){
       console.log("Error getting director",err);
       res.send("Server Error",500)
     } else {
-      if(req.body.camera.length>0){
+      if(req.body.camera && req.body.camera.length>0){
         director.favorite_camera = req.body.camera;
       }
-      if(req.body.movies.length>0){
+      if(req.body.movies && req.body.movies.length>0){
         director.favorite_movies = req.body.movies;
       }
       director.save().complete(function(){
