@@ -1,7 +1,7 @@
 Livestream-Directors-API
 ========================
 
-  API designed to register and list movie directors that have accounts on Livestream
+  API designed to register and list movie directors that have accounts on Livestream. Uses Postgres database directors.
 
 * **URL**
 
@@ -67,6 +67,36 @@ Livestream-Directors-API
 
 * **Success Response:**
 
+    * **Code:** 200 <br />
+
+* **Error Response:**
+
+    **Content:** `{ error : "Error saving director if account already exists or server error" }`
+
+    ---
+
+* **URL**
+
+  /api/directors/:id
+
+* **Method:**
+
+  `POST`
+
+* **Authorization Header:**
+
+  Uses a bearer token to check for authorization before updating
+
+
+* **Data Params**
+
+    ```
+    camera = string
+    movies = string with comma separated values
+    ```
+
+* **Success Response:**
+
     **Content Example:**
     ```
     director: {
@@ -79,6 +109,9 @@ Livestream-Directors-API
 
 * **Error Response:**
 
-    **Content:** `{ error : "Error saving director if account already exists or server error" }`
+    **Content:** `{ error : "Error updating director unauthorized" }`
 
-    ---
+* **Conditions:**
+
+   **Updates only favorite_camera or favorite_movies attributes.**
+
