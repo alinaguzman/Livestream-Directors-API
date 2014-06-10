@@ -27,6 +27,8 @@ module.exports.getDirector = function(req,res,next){
     if(err){
       console.log("Error getting director",err);
       res.send("Server Error",500)
+    } else if(!director){
+      res.send({"error":"No director exists with id "+directorId})
     } else {
       director.display(function(err,director){
         res.send({director:director});
