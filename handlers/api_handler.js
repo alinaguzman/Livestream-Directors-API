@@ -55,6 +55,10 @@ module.exports.saveDirector = function(req,res,next){
         console.log("Parsing director info from http get response and saving new entry");
 
         Director.checkIfExists(data[0],function(err,exists){
+          if(err){
+            console.log("Error checking livestream id against director list")
+            res.send({error:err})
+          }
           if(!exists){
             Director.create({
               livestream_id: data[0],

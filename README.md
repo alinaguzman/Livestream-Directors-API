@@ -3,13 +3,9 @@ Livestream-Directors-API
 
   API designed to register and list movie directors that have accounts on Livestream. Uses Postgres database directors.
 
-* **URL**
+* **URL and Method**
 
-  /api/directors
-
-* **Method:**
-
-  `GET`
+  `GET` /api/directors
 
 * **Success Response:**
 
@@ -21,13 +17,9 @@ Livestream-Directors-API
 
 ---
 
-* **URL**
+* **URL and Method**
 
-  /api/directors/:id
-
-* **Method:**
-
-  `GET`
+  `GET` /api/directors/:id
 
 * **Success Response:**
 
@@ -49,13 +41,9 @@ Livestream-Directors-API
     **Content:** `{ error : "No directors in the list or error fetching" }`
 
     ---
-* **URL**
+* **URL and Method**
 
-  /api/directors
-
-* **Method:**
-
-  `POST`
+  `POST` /api/directors
 
 * **Data Params**
 
@@ -75,13 +63,9 @@ Livestream-Directors-API
 
     ---
 
-* **URL**
+* **URL and Method**
 
-  /api/directors/:id
-
-* **Method:**
-
-  `POST`
+  `POST` /api/directors/:id
 
 * **Authorization Header:**
 
@@ -96,6 +80,8 @@ Livestream-Directors-API
     ```
 
 * **Success Response:**
+
+    * **Code:** 200 <br />
 
     **Content Example:**
     ```
