@@ -24,19 +24,23 @@ module.exports.getDirectors = function(req,res,next){
 //returns a single director or an error
 module.exports.getDirector = function(req,res,next){
 
-  var directorId = req.url.split("/")[3];
-  Director.find({where: {id: directorId}}).complete(function (err, director) {
-    if(err){
-      console.log("Error getting director",err);
-      res.send("Server Error",500)
-    } else if(!director){
-      res.send({"error":"No director exists with id "+directorId})
-    } else {
-      director.display(function(err,director){
-        res.send({director:director});
-      });
-    }
-  });
+  if(validator.isNumeric(req.params.director_id)){
+    var id = req.params.director_id;
+    Director.find({where: {id: id}}).complete(function (err, director) {
+      if(err){
+        console.log("Error getting director",err);
+        res.send("Server Error",500)
+      } else if(!director){
+        res.send({"error":"No director exists with id "+id})
+      } else {
+        director.display(function(err,director){
+          res.send({director:director});
+        });
+      }
+    });
+  } else {
+    res.send({error: "Id not valid"})
+  }
 
 };
 
@@ -99,25 +103,29 @@ module.exports.saveDirector = function(req,res,next){
 //updates an existing director
 module.exports.updateDirector = function(req,res,next){
 
-  var directorId = req.url.split("/")[3];
+  if(validator.isNumeric(req.params.director_id)){
+    var id = req.params.director_id;
+    Director.find({where: {id: id}}).complete(function (err, director) {
+      if(err){
+        console.log("Error getting director",err);
+        res.send("Server Error",500)
+      } else {
+        //updating camera if new data is in the post
+        if(req.body.camera && req.body.camera.length>0){
+          director.favorite_camera = req.body.camera;
+        }
+        //updating favorite movies if new data is in the post
+        if(req.body.movies && req.body.movies.length>0){
+          director.favorite_movies = req.body.movies;
+        }
+        director.save().complete(function(){
+          res.send({director:director});
+        });
+      }
+    });
+  } else {
+    res.send({error: "Id not valid"})
+  }
 
-  Director.find({where: {id: directorId}}).complete(function (err, director) {
-    if(err){
-      console.log("Error getting director",err);
-      res.send("Server Error",500)
-    } else {
-      //updating camera if new data is in the post
-      if(req.body.camera && req.body.camera.length>0){
-        director.favorite_camera = req.body.camera;
-      }
-      //updating favorite movies if new data is in the post
-      if(req.body.movies && req.body.movies.length>0){
-        director.favorite_movies = req.body.movies;
-      }
-      director.save().complete(function(){
-        res.send({director:director});
-      });
-    }
-  });
 
 };

@@ -6,6 +6,7 @@ var config = global.config = require('./config.js'),
 app = express();
 app.configure(function() {
   app.use(express.bodyParser());
+//  app.use(express.methodOverride());
   app.set('view engine', 'html');
   app.set('layout', '_layout');
   app.set('partials', {head: "_head"});
@@ -72,6 +73,6 @@ var api_handler = require('./handlers/api_handler');
 app.get('/api/directors',api_handler.getDirectors);
 app.get('/api/directors/:director_id(\\d+)', api_handler.getDirector);
 app.post('/api/directors', api_handler.saveDirector);
-app.post('/api/directors/:director_id(\\d+)', ensureAuthorized, api_handler.updateDirector);
+app.put('/api/directors/:director_id(\\d+)', ensureAuthorized, api_handler.updateDirector);
 
 exports = module.exports = app;
