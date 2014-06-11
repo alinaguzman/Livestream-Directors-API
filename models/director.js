@@ -11,6 +11,7 @@ module.exports = function(sequelize, DataTypes) {
   },{
     classMethods: {
 
+      //handles display for the full list of directors
       displayAll: function(directors,callback){
         if(directors.length > 0){
           var directorList = [];
@@ -29,6 +30,8 @@ module.exports = function(sequelize, DataTypes) {
           callback('No directors',null);
         }
       },
+
+      //checking if a new director is already registered
       checkIfExists: function(id,callback){
         var exists = false,
           Director = this;
@@ -50,12 +53,15 @@ module.exports = function(sequelize, DataTypes) {
           }
         });
       },
+
+      //validates incoming data from the post to make a new director
       validateDirector: function(body,callback){
 
         var livestream_id,
           camera,
           movies;
 
+        //requires a valid livestream_id to process
         if(validator.isNumeric(body.livestream_id)){
           livestream_id = body.livestream_id;
           console.log("livestream id in param: ",livestream_id)
@@ -63,13 +69,17 @@ module.exports = function(sequelize, DataTypes) {
           callback('Missing livestream id',null);
         }
 
+        //validates camera and movie strings
         camera = validator.isAlphanumeric(body.camera) ? body.camera : '';
         movies = validator.isAscii(body.movies) ? body.movies : '';
 
         callback(null,[livestream_id,camera,movies])
       }
     },
+
     instanceMethods: {
+
+      //handles display for an individual director
       display: function(callback){
         var director = this;
         var directorDisplay = {};

@@ -5,6 +5,7 @@ var config = global.config || require(__dirname + '/../config.js'),
   http = require('http'),
   validator = require('validator');
 
+//returns a list of all directors or an error
 module.exports.getDirectors = function(req,res,next){
 
   Director.findAll().complete(function (err, directors) {
@@ -20,6 +21,7 @@ module.exports.getDirectors = function(req,res,next){
 
 };
 
+//returns a single director or an error
 module.exports.getDirector = function(req,res,next){
 
   var directorId = req.url.split("/")[3];
@@ -38,8 +40,10 @@ module.exports.getDirector = function(req,res,next){
 
 };
 
+//saves a new director
 module.exports.saveDirector = function(req,res,next){
 
+  //validates incoming data from the post
   Director.validateDirector(req.body,function(err,data){
 
     var options = {
@@ -47,6 +51,7 @@ module.exports.saveDirector = function(req,res,next){
       path: '/accounts/'+data[0]
     };
 
+    //calling Livestream api to get director fullname and dob
     http.get(options, function(resp) {
       var body = '';
       resp.on('data', function(chunk) {
@@ -56,6 +61,7 @@ module.exports.saveDirector = function(req,res,next){
         body = JSON.parse(body);
         console.log("Parsing director info from http get response and saving new entry");
 
+        //checks that the new director does not have an account
         Director.checkIfExists(data[0],function(err,exists){
           if(err){
             console.log("Error checking livestream id against director list")
@@ -90,6 +96,7 @@ module.exports.saveDirector = function(req,res,next){
 
 };
 
+//updates an existing director
 module.exports.updateDirector = function(req,res,next){
 
   var directorId = req.url.split("/")[3];
@@ -99,9 +106,11 @@ module.exports.updateDirector = function(req,res,next){
       console.log("Error getting director",err);
       res.send("Server Error",500)
     } else {
+      //updating camera if new data is in the post
       if(req.body.camera && req.body.camera.length>0){
         director.favorite_camera = req.body.camera;
       }
+      //updating favorite movies if new data is in the post
       if(req.body.movies && req.body.movies.length>0){
         director.favorite_movies = req.body.movies;
       }
